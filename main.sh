@@ -4,32 +4,22 @@ list=("x" "x1" "1x"
   "int x = 0" "int x1 = 0" "int 1x = 0")
 
 integerNumberGlob='?(-|+)+([[:digit:]])?(u|ul|lu)'
-floatNumberGlob='?(-|+)+([[:digit:]])?(.+([[:digit:]]))?(d|f|m)'
+floatingNumberGlob='?(-|+)+([[:digit:]])?(.+([[:digit:]]))?(d|f|m)'
 charGlob="'?'"
 stringGlob='"*"'
-varGlob="@($integerNumberGlob|$floatNumberGlob|$charGlob|$stringGlob)"
+valueGlob="@($integerNumberGlob|$floatNumberGlob|$charGlob|$stringGlob)"
 
-integralTypeGlob='@(sbyte|byte|short|ushort|int|uint|long|ulong)'
-floatingPointTypeGlob='@(float|double|decimal)'
+integralTypeGlob='sbyte|byte|short|ushort|int|uint|long|ulong'
+floatingPointTypeGlob='float|double|decimal'
 charTypeGlob='char'
 stringTypeGlob='string'
 varTypeGlob='var'
-
-declare -A typeValueDictionary=(["$integralTypeGlob"]="$integerNumberGlob" ["$floatingPointTypeGlob"]="$floatNumberGlob"
-  ["$charTypeGlob"]="$charGlob" ["$stringTypeGlob"]="$stringGlob"
-  ["$varTypeGlob"]="$varGlob")
+typeGlob="@($integralTypeGlob|$floatingPointTypeGlob|$charTypeGlob|$stringTypeGlob|$varTypeGlob)"
 
 identifierGlob='[[:alpha:]]*([[:alnum:]])'
-valueGlob="@($integerNumberGlob|$floatNumberGlob|$charGlob|$stringGlob)"
 
-glob='@('
-for type in "${!typeValueDictionary[@]}"
-do
-  glob+="$type+([[:space:]])$identifierGlob*([[:space:]])=*([[:space:]])${typeValueDictionary[$type]}|"
-done
-glob="${glob:0:-1}"
-glob+=')'
-echo "$glob"
+glob="$typeGlob+([[:space:]])$identifierGlob*([[:space:]])=*([[:space:]])$valueGlob"
+echo "glob == $glob"
 
 shopt -s nocasematch
 for i in "${list[@]}"
