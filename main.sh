@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 list=("var x = 0" "var x = 22.5")
 
 integerNumberGlob='?(-|+)+([[:digit:]])?(u|ul|lu)'
